@@ -17,7 +17,8 @@ interface SuccessProps {
 export default function Success({ customerName, product }: SuccessProps) {
   return (
     <>
-      <Head>
+      <h1>Hello There!</h1>
+      {/* <Head>
         <title>Compra efetuada | Ignite Shop</title>
 
         <meta name="robots" content="noindex" />
@@ -36,37 +37,37 @@ export default function Success({ customerName, product }: SuccessProps) {
         </p>
 
         <Link href={"/"}>Voltar ao catálogo</Link>
-      </SuccessContainer>
+      </SuccessContainer> */}
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  if (!query.session_id) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+//   if (!query.session_id) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  const sessionId = String(query.session_id);
+//   const sessionId = String(query.session_id);
 
-  const session = await stripe.checkout.sessions.retrieve(sessionId, {
-    expand: ["line_items", "line_items.data.price.product"],
-  });
+//   const session = await stripe.checkout.sessions.retrieve(sessionId, {
+//     expand: ["line_items", "line_items.data.price.product"],
+//   });
 
-  const customerName = session.customer_details.name;
-  const product = session.line_items.data[0].price.product as Stripe.Product;
+//   const customerName = session.customer_details.name;
+//   const product = session.line_items.data[0].price.product as Stripe.Product;
 
-  return {
-    props: {
-      customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0],
-      },
-    },
-  };
-};
+//   return {
+//     props: {
+//       customerName,
+//       product: {
+//         name: product.name,
+//         imageUrl: product.images[0],
+//       },
+//     },
+//   };
+// };
