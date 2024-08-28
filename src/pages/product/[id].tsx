@@ -7,8 +7,6 @@ import Image from "next/image";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { stripe } from "../../lib/stripe";
 import Stripe from "stripe";
-import axios from "axios";
-import { useState } from "react";
 import Head from "next/head";
 import { useShoppingCart } from "use-shopping-cart";
 
@@ -25,29 +23,6 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
-  // const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-  //   useState(false);
-
-  // async function handleBuyProduct() {
-  //   try {
-  //     setIsCreatingCheckoutSession(true);
-
-  //     const response = await axios.post("/api/checkout", {
-  //       priceId: product.defaultPriceId,
-  //     });
-
-  //     const { checkoutUrl } = response.data;
-
-  //     window.location.href = checkoutUrl;
-  //   } catch (err) {
-  //     // Conectar com uma ferramenta de observabilbidade (Datadog / Sentry)
-
-  //     setIsCreatingCheckoutSession(false);
-
-  //     alert("Falha ao redirecionar ao checkout!");
-  //   }
-  // }
-
   const { addItem } = useShoppingCart();
 
   function handleAddToCart(id: string) {

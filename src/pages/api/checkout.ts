@@ -5,14 +5,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { items } = req.body;
-  console.log("products: ", {items})
+  const { products } = req.body;
 
   if (req.method != "POST") {
     return res.status(405).json({ error: "Method not allowed." });
   }
 
-  if (!items) {
+  if (!products) {
     return res.status(400).json({ error: "Product not found." });
   }
 
@@ -23,10 +22,9 @@ export default async function handler(
     success_url: successUrl,
     cancel_url: cancelURL,
     mode: "payment",
-    line_items: items,
+    line_items: products,
   });
-  
-  
+
   return res.status(201).json({
     checkoutUrl: checkoutSession.url,
   });

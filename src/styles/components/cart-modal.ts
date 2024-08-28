@@ -159,7 +159,16 @@ export const OrderButton = styled("button", {
 
   cursor: "pointer",
 
+  "&:disabled": {
+    opacity: 0.6,
+  },
+
   "&:hover": {
     backgroundColor: "$green300",
+
+    "&:disabled": {
+      cursor: "not-allowed",
+      backgroundColor: "$green500",
+    },
   },
 });

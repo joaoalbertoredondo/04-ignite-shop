@@ -15,16 +15,38 @@ import {
 import Image from "next/image";
 import { X } from "@phosphor-icons/react";
 import { priceFormatter } from "../../utils/formatter";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface Props {
   setModalOpen: (value: boolean) => void;
 }
 
 export default function CartModal({ setModalOpen }: Props) {
-  const { cartCount, cartDetails, removeItem, redirectToCheckout } =
-    useShoppingCart();
+  const { cartCount, cartDetails, removeItem, clearCart } = useShoppingCart();
 
-  const cart = Object.entries(cartDetails!).map((product) => product[1]);
+  const cart = Object.keys(cartDetails).map((key) => cartDetails[key]);
+  console.log(cart);
+  async function handleBuyProduct() {
+    try {
+      const products = cart.map((product) => {
+        return { price: product.defaultPriceId, quantity: product.quantity };
+      });
+
+      console.log("products: ", products);
+      const response = await axios.post("/api/checkout", {
+        products,
+      });
+
+      clearCart();
+
+      const { checkoutUrl } = response.data;
+
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      alert("Falha ao redirecionar ao checkout!");
+    }
+  }
 
   let totalValue = 0;
 
@@ -32,22 +54,15 @@ export default function CartModal({ setModalOpen }: Props) {
     totalValue = totalValue + product.defaultPrice * product.quantity;
   });
 
-  // function handleBuyProduct() {
-  //   console.log(cart);
-  // }
+  const [isDisabled, setIsDisabled] = useState(true);
 
-  async function handleCheckoutClick() {
-    // event.preventDefault();
-    try {
-      const result = await redirectToCheckout();
-      if (result?.error) {
-        console.log("result");
-      }
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    if (cart.length > 0) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
     }
-    console.log("clicou");
-  }
+  }, [cart]);
 
   return (
     <CartModalContainer>
@@ -58,7 +73,7 @@ export default function CartModal({ setModalOpen }: Props) {
       <h2>Sacola de compras</h2>
       <Content>
         <ProductsInCart>
-          {cart.length > 0 &&
+          {cart.length > 0 ? (
             cart.map((product) => (
               <ItemContainer key={product.id}>
                 <ImgContainer>
@@ -79,7 +94,10 @@ export default function CartModal({ setModalOpen }: Props) {
                   </section>
                 </div>
               </ItemContainer>
-            ))}
+            ))
+          ) : (
+            <p>Sua sacola está vazia.</p>
+          )}
         </ProductsInCart>
 
         <OrderDetails>
@@ -95,7 +113,7 @@ export default function CartModal({ setModalOpen }: Props) {
             </Total>
           </div>
 
-          <OrderButton onClick={() => handleCheckoutClick()}>
+          <OrderButton onClick={handleBuyProduct} disabled={isDisabled}>
             Finalizar compra
           </OrderButton>
         </OrderDetails>

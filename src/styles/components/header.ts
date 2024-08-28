@@ -8,9 +8,10 @@ export const HeaderContainer = styled("header", {
 
   display: "flex",
   justifyContent: "space-between",
+  alignItems: "center",
 });
 
-export const Cart = styled("button", {
+export const CartButton = styled("button", {
   width: 48,
   height: 48,
 
